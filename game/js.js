@@ -1,5 +1,6 @@
 const sectionWidth = 200;
 const $map = $('.map');
+const $player = $('#player');
 const $numberOfSections = parseInt($map.css('width')) / sectionWidth;
 const $windowWidth = parseInt($('.window').css('width'));
 
@@ -158,6 +159,57 @@ const $windowWidth = parseInt($('.window').css('width'));
     }
 })();
 
+//***************PLAYER ANIMATE SPRITE***************
+
+(function () {
+    let spriteSize = 105, width = spriteSize;
+    let spriteAllSize = 630;
+    let interval;
+    let stopRunning = true;
+
+    function animatePlayer() {
+        if (stopRunning) {
+            stopRunning = false;
+            interval = setInterval(() => {
+                console.log(interval);
+                document.getElementById("player").style.backgroundPosition = `-${spriteSize}px 0px`;
+                spriteSize<spriteAllSize ? spriteSize = spriteSize+width : spriteSize = width;
+            }, 100);
+        }
+    }
+
+    function stopAnimate() {
+        clearInterval(interval);
+        stopRunning = true;
+        // document.getElementById("player").style.backgroundPosition = `0px 0px`;
+    }
+
+    window.addEventListener('keydown', function (event) {
+        if (event.code === 'ArrowRight') {
+            $player.removeClass('scaleXrotate');
+            animatePlayer();
+        }
+    });
+
+    window.addEventListener('keyup', function (event) {
+        if (event.code === 'ArrowRight') {
+            stopAnimate();
+        }
+    });
+
+    window.addEventListener('keydown', function (event) {
+        if (event.code === 'ArrowLeft') {
+            $player.addClass('scaleXrotate');
+            animatePlayer();
+        }
+    });
+
+    window.addEventListener('keyup', function (event) {
+        if (event.code === 'ArrowLeft') {
+            stopAnimate();
+        }
+    });
+})();
 
 //***************CLOUDS***************
 
@@ -175,7 +227,7 @@ const $windowWidth = parseInt($('.window').css('width'));
                 marginTop: Math.ceil(Math.random() * 3) * cloudMinWidth,
             };
         })
-        .filter(cloud => Math.random() > cloudAmountRandomizer);
+        .filter(() => Math.random() > cloudAmountRandomizer);
 
     mapCloudTable.forEach((cloud, index) => {
         cloud.timeShift = Math.ceil(1 / cloud.width * Math.pow(10, 7));
